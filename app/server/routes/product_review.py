@@ -20,3 +20,18 @@ async def get_review_by_id(id: PydanticObjectId) -> ProductReview:
 async def get_all_reviews() -> List[ProductReview]:
     reviews = await ProductReview.find_all().to_list()
     return reviews
+
+@router.put('/{id}', response_description='review record pertaining to ID updated')
+async def update_student_data(id: PydanticObjectId, req: UpdateProductReview) -> ProductReview:
+    req = {k : v for k,v in req.dict().items() if v is not None}
+    update_query = {"$set": {
+        field: value for field, value in req.items()
+    }}
+    review = await ProductReview.get(id)
+    if not review:
+        raise HTTPException(
+            status_code=404,
+            detail=f'No review record found for id {id}'
+        )
+    await review.update(update_query)
+    return review
