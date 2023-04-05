@@ -28,11 +28,12 @@ class ProductReview(Document):
 class UpdateProductReview(BaseModel):
     name: Optional[str]
     product: Optional[str]
-    rating: Optional[str]
+    rating: Optional[float]
     review: Optional[str]
     date = Optional[datetime]
 
     class Config:
+        arbitrary_types_allowed=True
         schema_extra = {
             "example": {
                 "name": "John Doe",
